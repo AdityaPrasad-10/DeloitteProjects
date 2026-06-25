@@ -1,0 +1,75 @@
+========================================
+SUBMISSION #1 — 24/4/2026, 11:00:27 am
+========================================
+
+--- USER ---
+  Data Provider Name       : acme
+  Provider Short Code      : acme
+  Source Container         : rms landed
+  Source Container Path    : paksos
+  Country Code             : us
+  Country                  : sklsl
+  Category Coverage        : xkjsjk
+  Dataset Code             : POS
+
+--- SME ---
+  Unique IDs Present       : Yes
+  Derive Country from Filename: Yes
+  Feed Type                : Direct
+  Write Mode               : append
+  Key Columns to Merge     : jxax,jxksjsk
+  Transform Set            : nxnasx
+  Dimension Routing Set    : nxksjnjx
+  Overlap Delete Column    : skxlsw
+========================================
+
+========================================
+SUBMISSION #2 — 24/4/2026, 2:51:33 pm
+========================================
+
+--- USER ---
+  Data Provider Name       : acme endnedq
+  Provider Short Code      : n cwcmw c
+  Source Container         : media landed
+  Source Container Path    : ckqbcjhcjh
+  Country Code             : ks
+  Country                  : wnbc
+  Category Coverage        : mdnsn,sn
+  Dataset Code             : POS
+
+--- SME ---
+  Unique IDs Present       : Yes
+  Derive Country from Filename: Yes
+  Feed Type                : Direct
+  Write Mode               : append
+  Key Columns to Merge     : bxkscj
+  Transform Set            : a cacxn
+  Dimension Routing Set    : xjsckjcslkqlhd
+  Overlap Delete Column    : nsc k,sj
+========================================
+
+========================================
+SUBMISSION #3 — 24/4/2026, 2:54:55 pm
+========================================
+
+--- USER ---
+  Data Provider Name       : acme 
+  Provider Short Code      : sbhd
+  Source Container         : rms landed
+  Source Container Path    : naxx
+  Country Code             : ks
+  Country                  : jsjsjdb
+  Category Coverage        : nxjwd
+  Dataset Code             : nqs
+
+--- SME ---
+  Unique IDs Present       : Yes
+  Derive Country from Filename: Yes
+  Feed Type                : Direct
+  Write Mode               : append
+  Key Columns to Merge     : —
+  Transform Set            : —
+  Dimension Routing Set    : —
+  Overlap Delete Column    : —
+========================================
+

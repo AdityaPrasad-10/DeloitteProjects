@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 560px;
+            margin: 60px auto;
+            padding: 20px;
+            background: #f6f7fb;
+        }
+        .shell {
+            background: #ffffff;
+            border: 1px solid #e8e8ef;
+            border-radius: 10px;
+            padding: 18px 18px 22px 18px;
+            box-shadow: 0 8px 24px rgba(20, 20, 40, 0.06);
+        }
+        h2 {
+            margin: 8px 0 12px 0;
+            font-size: 18px;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        #stepIndicator {
+            font-size: 14px;
+            color: #333;
+            font-weight: 600;
+        }
+        #progress {
+            width: 100%;
+            height: 8px;
+            background: #e9eef7;
+            border-radius: 999px;
+            overflow: hidden;
+            border: 1px solid #e0e6f2;
+        }
+        #progressBar {
+            height: 100%;
+            width: 50%;
+            background: linear-gradient(90deg, #4CAF50, #2e7d32);
+            border-radius: 999px;
+            transition: width 220ms ease;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #222;
+        }
+        input, select {
+            display: block;
+            width: 100%;
+            margin: 8px 0 0 0;
+            padding: 10px;
+            font-size: 15px;
+            box-sizing: border-box;
+            border: 1px solid #cfd6e4;
+            border-radius: 6px;
+            background: #fff;
+            outline: none;
+            transition: border-color 160ms ease, box-shadow 160ms ease;
+        }
+        input:focus, select:focus {
+            border-color: #2196F3;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.15);
+        }
+        .invalid {
+            border-color: #d32f2f !important;
+            box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.10) !important;
+        }
+        .error {
+            display: none;
+            margin-top: 6px;
+            font-size: 13px;
+            color: #c62828;
+        }
+        .hint {
+            margin-top: 12px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        button {
+            padding: 10px 18px;
+            font-size: 15px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+        }
+        button:hover { background-color: #45a049; }
+        button.secondary {
+            background-color: #6b7280;
+        }
+        button.secondary:hover {
+            background-color: #4b5563;
+        }
+        button.red {
+            background-color: #ef4444;
+        }
+        button.red:hover {
+            background-color: #dc2626;
+        }
+
+        .btnrow {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        /* Equal-width buttons */
+        .btnrow button {
+            flex: 1 1 0;
+            min-width: 140px;
+            margin-top: 0px;
+        }
+
+        #successMsg {
+            display: none;
+            color: #1b5e20;
+            font-size: 16px;
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #1b5e20;
+            border-radius: 6px;
+            background-color: #f0fff0;
+        }
+
+        .req {
+            color: red;
+            margin-left: 4px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="shell">
+        <div class="topbar">
+            <div id="stepIndicator">Step 1 of 2</div>
+        </div>
+        <div id="progress">
+            <div id="progressBar"></div>
+        </div>
+
+        <div class="page active", id="form1">
+            <h2>Section 1: User Details</h2>
+            <label for="dpn">Data Provider Name :<span class="req">*</span></label>
+            <input type="text" id="dpn" placeholder="E.g: acme data co." required/>
+            <div class="error" id="err-dpn">This field is required.</div>
+
+            <label for="psc">Provider Short Code :<span class="req">*</span></label>
+            <input type="text" id="psc" maxlength="50" placeholder="E.g: acme" required/>
+            <div class="error" id="err-psc">This field is required.</div>
+
+            <label for="source-container">Source Container :<span class="req">*</span></label>
+            <select name="source-container" id="source-container" required>
+                <option value="rms landed">rms-landed</option>
+                <option value="media landed">media-landed</option>
+            </select><br><br>
+            <div class="error" id="err-source-container">This field is required.</div>
+
+            <label for="source-container-path">Source Container Path:<span class="req">*</span></label>
+            <input type="text" id ="source-container-path" placeholder="Path" required/>
+            <div class="error" id="err-source-container-path">This field is required.</div>
+
+            <label for="country-code">Country Code :</label>
+            <input type="text" id="country-code" maxlength="2" placeholder="ISO 2 Letter Country Code"/>
+
+            <label for="country-name">Country :</label>
+            <input type="text" id="country-name" placeholder="Full country name"/>
+
+            <label for="category-coverage">Category Coverage :</label>
+            <input type="text" id="category-coverage" placeholder="Data category/scope"/>
+
+            <label for="dataset-code">Dataset Code :</label>
+            <input list="dataset-code-list" id="dataset-code" placeholder="Type to search...">
+            <datalist id="dataset-code-list">
+                <option value="RMS">
+                <option value="POS">
+            </datalist>
+
+            <div class="btnrow">
+                <button onclick="submituserData()">Submit</button>
+                <button class="secondary" onclick="resetAll()">Reset</button>
+            </div>
+            <div class="hint">Tip: Your inputs auto-save as a draft. Refresh won’t lose your work.</div>
+        </div>
+
+        <div class="page" id="form2">
+            <h2>Section 2: SME Details</h2>
+            <label for="unique-id">Is there Unique ID's ?</label>
+            <select id="unique-id">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select><br><br>
+
+            <label for="derive">Derive Country from filename ?</label>
+            <select id="derive">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select><br><br>
+
+            <label for="direct">Is this a direct feed or indirect (via intermediary?)</label>
+            <select id="direct">
+                <option value="Direct">Direct</option>
+                <option value="Indirect">Indirect</option>
+            </select><br><br>
+
+            <label for="writemode">Write Mode :</label>
+            <select id="writemode">
+                <option value="append">Append</option>
+                <option value="Overwrite">Overwrite</option>
+                <option value="Merge">Merge</option>
+            </select><br><br>
+
+            <label for="merge">Keycolumns to merge :</label>
+            <input id="merge" type="text" placeholder="Column1,column2....">
+
+            <label for="transform">Transform Set :</label>
+            <input id="transform" type="text" placeholder="Name of transformation">
+
+            <label for="dimension">Dimension Routing Set :</label>
+            <input id="dimension" type="text" placeholder="Routing set name">
+
+            <label for="overlap">Overlap Delete Column :</label>
+            <input id="overlap" type="text" placeholder="Column to delete">
+
+            <div class="btnrow">
+                <button class="secondary" onclick="goBack()">Back</button>
+                <button onclick="submitsmeData()">Submit</button>
+                <button class="red" onclick="resetAll()">Reset</button>
+            </div>
+        </div>
+
+        <div id="successMsg">
+            Your form is saved successfully
+            <div class="btnrow" style="margin-top: 12px;">
+                <button class="secondary" onclick="startNew()">Start New</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        //user data
+        let userData={};
+        function submituserData(){
+            clearErrors();
+
+            userData= {
+                dpn : document.getElementById('dpn').value.trim(),
+                psc : document.getElementById('psc').value.trim(),
+                sourceContainer : document.getElementById('source-container').value.trim(),
+                scp : document.getElementById('source-container-path').value.trim(),
+                countryCode : document.getElementById('country-code').value.trim(),
+                countryName : document.getElementById('country-name').value.trim(),
+                categoryCoverage : document.getElementById('category-coverage').value.trim(),
+                datasetCode : document.getElementById('dataset-code').value.trim()
+            };
+            if(!userData.dpn|| !userData.psc || !userData.scp || !userData.sourceContainer){
+                showError('dpn', !userData.dpn);
+                showError('psc', !userData.psc);
+                showError('source-container', !userData.sourceContainer);
+                showError('source-container-path', !userData.scp);
+                alert('Fill out the required fields before submitting.');
+                return;
+            }
+
+            setStep(2);
+            saveDraft();
+        }    
+            
+            //sme data
+            function submitsmeData(){
+                const smeData= getSmeData();
+
+                let text= buildExportText(userData, smeData);
+                downloadFile(text, 'form-data.txt', 'text/plain');
+
+                setStep(3);
+                saveDraft();
+            }
+
+            function getSmeData(){
+                return {
+                    uniqueId : document.getElementById('unique-id').value.trim(),
+                    derive : document.getElementById('derive').value.trim(),
+                    direct : document.getElementById('direct').value.trim(),
+                    writemode : document.getElementById('writemode').value.trim(),
+                    merge : document.getElementById('merge').value.trim(),
+                    transform : document.getElementById('transform').value.trim(),
+                    dimension : document.getElementById('dimension').value.trim(),
+                    overlap : document.getElementById('overlap').value.trim()
+                };
+            }
+
+            function buildExportText(userObj, smeObj){
+                let text= `Submitted on : ${new Date().toLocaleString()}\n\n`;
+                text+= `--- USER ---\n`;
+                for(const[key,value] of Object.entries(userObj)){
+                    text+= `${key} : ${value}\n`;
+                }
+                text+= `--- SME ---\n`;
+                for(const[key,value] of Object.entries(smeObj)){
+                    text+= `${key} : ${value}\n`;
+                }
+                return text;
+            }
+
+            function downloadFile(content, filename, mime){
+                const a=document.createElement('a');
+                a.href= URL.createObjectURL(new Blob([content], { type: mime }));
+                a.download= filename;
+                a.click();
+            }
+
+            function setStep(step){
+                if(step===1){
+                    document.getElementById('form1').classList.add('active');
+                    document.getElementById('form2').classList.remove('active');
+                    document.getElementById('successMsg').style.display='none';
+                    document.getElementById('stepIndicator').textContent='Step 1 of 2';
+                    document.getElementById('progressBar').style.width='50%';
+                }
+                if(step===2){
+                    document.getElementById('form1').classList.remove('active');
+                    document.getElementById('form2').classList.add('active');
+                    document.getElementById('successMsg').style.display='none';
+                    document.getElementById('stepIndicator').textContent='Step 2 of 2';
+                    document.getElementById('progressBar').style.width='100%';
+                }
+                if(step===3){
+                    document.getElementById('form1').classList.remove('active');
+                    document.getElementById('form2').classList.remove('active');
+                    document.getElementById('successMsg').style.display='block';
+                    document.getElementById('stepIndicator').textContent='Done';
+                    document.getElementById('progressBar').style.width='100%';
+                }
+            }
+
+            function goBack(){
+                setStep(1);
+                saveDraft();
+            }
+
+            function resetAll(){
+                localStorage.removeItem('formDraft');
+
+                document.getElementById('dpn').value='';
+                document.getElementById('psc').value='';
+                document.getElementById('source-container').value='rms landed';
+                document.getElementById('source-container-path').value='';
+                document.getElementById('country-code').value='';
+                document.getElementById('country-name').value='';
+                document.getElementById('category-coverage').value='';
+                document.getElementById('dataset-code').value='';
+
+                document.getElementById('unique-id').value='Yes';
+                document.getElementById('derive').value='Yes';
+                document.getElementById('direct').value='Direct';
+                document.getElementById('writemode').value='append';
+                document.getElementById('merge').value='';
+                document.getElementById('transform').value='';
+                document.getElementById('dimension').value='';
+                document.getElementById('overlap').value='';
+
+                userData={};
+                clearErrors();
+                setStep(1);
+            }
+
+            function startNew(){
+                resetAll();
+            }
+
+            function showError(fieldId, shouldShow){
+                const map= {
+                    'dpn': 'err-dpn',
+                    'psc': 'err-psc',
+                    'source-container': 'err-source-container',
+                    'source-container-path': 'err-source-container-path'
+                };
+                const errId= map[fieldId];
+                const el= document.getElementById(fieldId);
+                const err= document.getElementById(errId);
+
+                if(shouldShow){
+                    if(el) el.classList.add('invalid');
+                    if(err) err.style.display='block';
+                }else{
+                    if(el) el.classList.remove('invalid');
+                    if(err) err.style.display='none';
+                }
+            }
+
+            function clearErrors(){
+                showError('dpn', false);
+                showError('psc', false);
+                showError('source-container', false);
+                showError('source-container-path', false);
+            }
+
+            function saveDraft(){
+                const smeData= getSmeData();
+                const liveUser= getUserDataLive();
+                const payload= {
+                    user: liveUser,
+                    sme: smeData,
+                    savedAt: new Date().toISOString()
+                };
+                localStorage.setItem('formDraft', JSON.stringify(payload));
+            }
+
+            function getUserDataLive(){
+                return {
+                    dpn : document.getElementById('dpn').value.trim(),
+                    psc : document.getElementById('psc').value.trim(),
+                    sourceContainer : document.getElementById('source-container').value.trim(),
+                    scp : document.getElementById('source-container-path').value.trim(),
+                    countryCode : document.getElementById('country-code').value.trim(),
+                    countryName : document.getElementById('country-name').value.trim(),
+                    categoryCoverage : document.getElementById('category-coverage').value.trim(),
+                    datasetCode : document.getElementById('dataset-code').value.trim()
+                };
+            }
+
+            function loadDraft(){
+                const raw= localStorage.getItem('formDraft');
+                if(!raw) return;
+
+                try{
+                    const data= JSON.parse(raw);
+                    if(data && data.user){
+                        document.getElementById('dpn').value=data.user.dpn || '';
+                        document.getElementById('psc').value=data.user.psc || '';
+                        document.getElementById('source-container').value=data.user.sourceContainer || 'rms landed';
+                        document.getElementById('source-container-path').value= data.user.scp || '';
+                        document.getElementById('country-code').value= data.user.countryCode || '';
+                        document.getElementById('country-name').value= data.user.countryName || '';
+                        document.getElementById('category-coverage').value= data.user.categoryCoverage || '';
+                        document.getElementById('dataset-code').value= data.user.datasetCode || '';
+                        userData= data.user;
+                    }
+                    if(data && data.sme){
+                        document.getElementById('unique-id').value= data.sme.uniqueId || 'Yes';
+                        document.getElementById('derive').value= data.sme.derive || 'Yes';
+                        document.getElementById('direct').value= data.sme.direct || 'Direct';
+                        document.getElementById('writemode').value= data.sme.writemode || 'append';
+                        document.getElementById('merge').value= data.sme.merge || '';
+                        document.getElementById('transform').value= data.sme.transform || '';
+                        document.getElementById('dimension').value= data.sme.dimension || '';
+                        document.getElementById('overlap').value= data.sme.overlap || '';
+                    }
+                }catch(e){
+                }
+            }
+
+            function wireAutosave(){
+                const ids= [
+                    'dpn','psc','source-container','source-container-path','country-code','country-name','category-coverage','dataset-code',
+                    'unique-id','derive','direct','writemode','merge','transform','dimension','overlap'
+                ];
+                ids.forEach(id=>{
+                    const el= document.getElementById(id);
+                    if(!el) return;
+                    el.addEventListener('input', ()=>{
+                        if(id==='dpn') showError('dpn', false);
+                        if(id==='psc') showError('psc', false);
+                        if(id==='source-container') showError('source-container', false);
+                        if(id==='source-container-path') showError('source-container-path', false);
+                        saveDraft();
+                    });
+                    el.addEventListener('change', saveDraft);
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', ()=>{
+                loadDraft();
+                wireAutosave();
+                setStep(1);
+            });
+    </script>
+    
+</body>
+</html>
