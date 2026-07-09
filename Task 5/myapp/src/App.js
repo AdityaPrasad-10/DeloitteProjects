@@ -4,6 +4,19 @@ import {
   useMantineReactTable,
 } from "mantine-react-table";
 
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+ PieChart,
+  Pie,
+  Cell,
+  Legend,
+} from "recharts";
+
 const org = {
   group1: {
     type1: ["A", "B"],
@@ -14,6 +27,7 @@ const org = {
   },
 };
 
+const COLORS = ["#0088FE", "#FF8042"];
 const rec = [
   { name: "A", group: "group1", type: "type1", status: "active" },
   { name: "B", group: "group1", type: "type1", status: "inactive" },
@@ -123,5 +137,53 @@ export default function App() {
     },
   });
 
-  return <MantineReactTable table={table} />;
+  const filteredrows=table.getFilteredRowModel().rows;
+
+  const statuschartdata=useMemo(()=>{
+    const counts={};
+    filteredrows.forEach((row)=>{
+      const status=row.original.status;
+      counts[status]=(counts[status]||0)+1;
+    });
+    return Object.entries(counts).map(([status,count])=>({
+      status,count,
+    }));
+  },[filteredrows]);
+
+  return( 
+    <>
+   
+
+<ResponsiveContainer width="50%" height={200}>
+      <BarChart data={statuschartdata}>
+        <XAxis dataKey="status" />
+        <YAxis />
+        <Tooltip />
+        <Bar dataKey="count" />
+      </BarChart>
+    </ResponsiveContainer>
+    <PieChart width={400} height={300}>
+  <Pie
+    data={statuschartdata}
+    dataKey="count"
+    nameKey="status"
+    outerRadius={100}
+    label
+    >
+    {statuschartdata.map((entry, index) => (
+      <Cell
+        key={`cell-${index}`}
+        fill={COLORS[index % COLORS.length]}
+      />
+    ))}
+  </Pie>
+
+  <Tooltip />
+  <Legend />
+</PieChart>
+
+
+    <MantineReactTable table={table} />
+    </>
+  );
 }
